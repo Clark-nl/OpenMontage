@@ -7,7 +7,7 @@ llm:
   max_tokens: 4096
 
 budget:
-  mode: warn                     # observe | warn | cap
+  mode: cap                      # observe | warn | cap
   total_usd: 10.00
   reserve_pct: 0.10              # holdback for retries / cleanup
   single_action_approval_usd: 0.50

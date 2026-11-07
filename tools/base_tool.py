@@ -414,9 +414,11 @@ class BaseTool(ABC):
         super().__init_subclass__(**kwargs)
         impl = cls.__dict__.get("execute")
         if impl is not None and not getattr(impl, "__isabstractmethod__", False):
-            # Cache is outermost: a hit skips both the live call and its event
-            # emission. Instrumentation wraps the raw implementation beneath it.
-            cls.execute = _cache_execute(_instrument_execute(impl))
+            # Cache is outermost: a hit skips the budget gate, the live call and
+            # its event emission. Instrumentation wraps the raw implementation.
+            from tools.budget_gate import enforce_budget
+
+            cls.execute = _cache_execute(enforce_budget(_instrument_execute(impl)))
 
     # --- Identity (override in subclasses) ---
     name: str = ""

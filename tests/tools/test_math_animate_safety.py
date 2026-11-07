@@ -188,3 +188,16 @@ def test_allow_unsafe_code_bypasses_scan(monkeypatch):
     result = MathAnimate().execute({"scene_code": dangerous, "allow_unsafe_code": True})
     assert result.success is False
     assert "safety scan" not in (result.error or "")
+
+
+def test_refuses_to_run_without_host_opt_in(monkeypatch):
+    # Even code that passes the scan stays off until the host opts in (issue #864).
+    monkeypatch.delenv("OPENMONTAGE_ALLOW_CODE_EXEC")
+    monkeypatch.setattr("shutil.which", lambda _: "/usr/bin/manim")
+    monkeypatch.setattr(
+        "subprocess.run",
+        lambda *a, **k: pytest.fail("must not launch Manim"),
+    )
+    result = MathAnimate().execute({"scene_code": SAFE_SCENE, "allow_unsafe_code": True})
+    assert result.success is False
+    assert "OPENMONTAGE_ALLOW_CODE_EXEC" in result.error

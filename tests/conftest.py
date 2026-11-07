@@ -33,6 +33,10 @@ import socket
 
 import pytest
 
+# Stubbed paid tools must not hit the real ledger; test_budget_gate re-enables it.
+os.environ["OPENMONTAGE_BUDGET"] = "off"
+os.environ["OPENMONTAGE_ALLOW_CODE_EXEC"] = "1"
+
 _ALLOW_ENV_FLAG = "OPENMONTAGE_ALLOW_NETWORK"
 
 _LOOPBACK_HOSTS = {"localhost", "127.0.0.1", "::1", "0.0.0.0", ""}

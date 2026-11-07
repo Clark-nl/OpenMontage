@@ -21,7 +21,7 @@ reference_input:
     - frame_sampler
 
 extensions:
-  custom_scripts: true
+  custom_scripts: false
   custom_playbooks: true
   custom_skills: true
   custom_tools: false
@@ -171,7 +171,6 @@ stages:
       - image_selector
     optional_tools:
       - video_selector
-      - math_animate
       - diagram_gen
       - code_snippet
       - music_gen
@@ -182,7 +181,6 @@ stages:
       - diagram_gen
       - code_snippet
       - music_gen
-      - math_animate
     checkpoint_required: true
     human_approval_default: true
     review_focus:

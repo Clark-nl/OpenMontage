@@ -265,6 +265,18 @@ class MathAnimate(BaseTool):
         return deduped
 
     def _render(self, inputs: dict[str, Any]) -> ToolResult:
+        # The scan below is bypassable (issue #864), so hosts must opt in to
+        # running generated Python at all. Never set this on a shared worker.
+        if os.environ.get("OPENMONTAGE_ALLOW_CODE_EXEC") != "1":
+            return ToolResult(
+                success=False,
+                error=(
+                    "math_animate is disabled: it runs generated Python on the "
+                    "host. Set OPENMONTAGE_ALLOW_CODE_EXEC=1 only on a trusted, "
+                    "isolated machine."
+                ),
+            )
+
         scene_code = inputs["scene_code"]
         scene_name = inputs.get("scene_name")
         quality = inputs.get("quality", "medium")
